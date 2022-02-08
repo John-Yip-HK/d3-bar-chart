@@ -1,3 +1,5 @@
+import * as d3 from "https://cdn.skypack.dev/d3@7";
+
 const WIDTH = 800;
 const HEIGHT = 400;
 const PADDING = 50;
