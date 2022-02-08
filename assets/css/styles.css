@@ -5,11 +5,17 @@ body {
 
   justify-content: center;
   align-items: center;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 #title {
-  position: absolute;
-  top: 80px;
+  display: block;
+  margin: 2rem 0;
+
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 500;
 }
 
 #container {
@@ -35,26 +41,27 @@ h2 {
 }
 
 .bar {
-  fill: #888;
+  fill: rgb(20, 149, 189);
 }
 
-.bar:hover {
-  fill: #ccc;
-}
-
-div.tooltip {
+#tooltip {
   position: absolute;
-  z-index: 10;
-  visibility: hidden;
+  display: none;
+  background-color: #fff;
+  border: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 @media only screen and (min-width: 768px) {
-  #title {
-    top: 120px;
-  }
-
   #container {
-    width: 800px;
     height: 550px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  #container {
+    width: 850px;
   }
 }
