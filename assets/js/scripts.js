@@ -16,12 +16,21 @@ fetch(
 )
   .then((res) => res.json())
   .then((data) => {
-    const gdp = data.data.slice(0);
+    svg
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -250)
+      .attr("y", 70)
+      .text("Gross Domestic Product");
 
-    const xScale = d3
-      .scaleLinear()
-      .domain([0, gdp.length - 1])
-      .range([PADDING, WIDTH - PADDING]);
+    svg
+      .append("text")
+      .attr("x", WIDTH / 2 - 200)
+      .attr("y", HEIGHT - 5)
+      .text("More Information: http://www.bea.gov/national/pdf/nipaguid.pdf");
+
+    const gdp = data.data;
+
     const yScale = d3
       .scaleLinear()
       .domain([0, d3.max(gdp, (d) => d[1])])
@@ -31,9 +40,13 @@ fetch(
       .domain([0, d3.max(gdp, (d) => d[1])])
       .range([0, HEIGHT - 2 * PADDING]);
     const quarterScale = d3.scaleLinear().domain([1, 10]).range([1, 4]);
+    const yearScale = d3
+      .scaleTime()
+      .domain([new Date(gdp[0][0]), new Date(gdp[gdp.length - 1][0])])
+      .range([PADDING, WIDTH - PADDING]);
 
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
+    let xAxis = d3.axisBottom(yearScale);
+    let yAxis = d3.axisLeft(yScale);
 
     const tooltip = container
       .append("div")
@@ -56,9 +69,6 @@ fetch(
       const gdp = tooltip.attr("data-gdp");
 
       // const pointer = d3.pointer(event, container.node());
-      // console.log(pointer);
-      // const xCoor = pointer[0] - 2 * PADDING > 0 ? pointer[0] : PADDING * 2;
-      // const yCoor = pointer[1];
 
       tooltip
         .html(`${date[0]}-Q${quarterScale(date[1])}<br>$${gdp} Billion`)
@@ -78,7 +88,10 @@ fetch(
       .append("rect")
       .attr("width", 2.5)
       .attr("height", (d) => valScale(d[1]))
-      .attr("x", (_, i) => xScale(i))
+      .attr("x", (d) => {
+        const date = new Date(d[0]);
+        return yearScale(date);
+      })
       .attr("y", (d) => yScale(d[1]))
       .attr("data-date", (d) => d[0])
       .attr("data-gdp", (d) => d[1])
@@ -87,19 +100,16 @@ fetch(
       .on("mousemove", mousemove)
       .on("mouseout", mouseout);
 
-    svg
+    xAxis = svg
       .append("g")
       .attr("id", "x-axis")
       .attr("transform", `translate(0, ${HEIGHT - PADDING})`)
       .call(xAxis);
 
-    svg
+    yAxis = svg
       .append("g")
       .attr("id", "y-axis")
       .attr("transform", `translate(${PADDING}, 0)`)
-      .call(yAxis)
-      .append("text");
-
-    d3.selectAll(".tick text").attr("class", "tick");
+      .call(yAxis);
   })
   .catch((err) => alert(err.message));

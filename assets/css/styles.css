@@ -20,7 +20,7 @@ body {
 
 #container {
   width: 80vw;
-  height: 80vh;
+  height: fit-content;
   margin: 2rem auto;
 
   border: 2px solid black;
